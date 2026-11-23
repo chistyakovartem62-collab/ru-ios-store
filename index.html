@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Store — Приложения, коды и подписки</title>
-    <!-- Telegram WebApp Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -31,7 +30,6 @@
             padding-bottom: 110px;
         }
 
-        /* Шапка */
         .header-banner {
             background: linear-gradient(180deg, #2a1520 0%, var(--bg-color) 100%);
             padding: 20px 16px 15px;
@@ -69,7 +67,6 @@
             border-radius: 10px;
         }
 
-        /* Поиск и категории */
         .search-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -125,15 +122,8 @@
             border-color: var(--text-main);
         }
 
-        /* Сетка приложений */
         .container {
             padding: 16px;
-        }
-
-        .section-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 12px;
         }
 
         .apps-grid {
@@ -153,22 +143,23 @@
         .app-icon {
             width: 64px;
             height: 64px;
-            background: var(--card-bg);
             border-radius: 16px;
-            border: 1px solid var(--card-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
             margin-bottom: 6px;
-            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(0,0,0,0.3);
             position: relative;
+            overflow: hidden;
         }
 
-        .app-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .app-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
         }
 
         .app-name {
@@ -197,9 +188,9 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* Плавающая кнопка покупки */
         .cart-bar {
             position: fixed;
             bottom: 75px;
@@ -251,7 +242,6 @@
             box-shadow: 0 4px 15px rgba(255, 45, 85, 0.4);
         }
 
-        /* Нижняя навигация */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -315,12 +305,9 @@
     </div>
 
     <div class="container">
-        <div class="apps-grid" id="appsGrid">
-            <!-- Список приложений динамически генерируется скриптом -->
-        </div>
+        <div class="apps-grid" id="appsGrid"></div>
     </div>
 
-    <!-- Плавающая панель покупки -->
     <div class="cart-bar" id="cartBar">
         <div class="cart-info">
             <span class="cart-count" id="cartCount">1 приложение</span>
@@ -329,7 +316,6 @@
         <button class="buy-btn" onclick="checkout()">Купить</button>
     </div>
 
-    <!-- Нижнее меню -->
     <nav class="nav-bar">
         <button class="nav-item active">
             <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
@@ -351,26 +337,26 @@
 
     <script>
         const apps = [
-            { id: 1, name: "Сбербанк", cat: "banks", icon: "🟢", price: 790 },
-            { id: 2, name: "Т-Банк", cat: "banks", icon: "🟡", price: 790 },
-            { id: 3, name: "Альфа-Банк", cat: "banks", icon: "🔴", price: 790 },
-            { id: 4, name: "ВТБ", cat: "banks", icon: "🔵", price: 790 },
-            { id: 5, name: "Авито", cat: "services", icon: "📦", price: 790 },
-            { id: 6, name: "Вконтакте", cat: "social", icon: "💬", price: 790 },
-            { id: 7, name: "ВК Мессенджер", cat: "social", icon: "✈️", price: 790 },
-            { id: 8, name: "ВК Музыка", cat: "services", icon: "🎵", price: 790 },
-            { id: 9, name: "Окко", cat: "services", icon: "🍿", price: 790 },
-            { id: 10, name: "РЖД Пассажирам", cat: "services", icon: "🚆", price: 790 },
-            { id: 11, name: "ChatGPT", cat: "ai", icon: "🤖", price: 790 },
-            { id: 12, name: "Claude AI", cat: "ai", icon: "🧠", price: 790 },
-            { id: 13, name: "DeepSeek", cat: "ai", icon: "🔮", price: 790 },
-            { id: 14, name: "Perplexity", cat: "ai", icon: "🌐", price: 790 },
-            { id: 15, name: "Happ Plus", cat: "services", icon: "⚡", price: 790 },
-            { id: 16, name: "v2RayTun", cat: "services", icon: "🛡️", price: 790 }
+            { id: 1, name: "Сбербанк", cat: "banks", bg: "linear-gradient(135deg, #00A651 0%, #007A3D 100%)", text: "СБ", price: 790 },
+            { id: 2, name: "Т-Банк", cat: "banks", bg: "linear-gradient(135deg, #FFDD00 0%, #E5C400 100%)", text: "Т", price: 790 },
+            { id: 3, name: "Альфа-Банк", cat: "banks", bg: "linear-gradient(135deg, #EF3124 0%, #B81D12 100%)", text: "А", price: 790 },
+            { id: 4, name: "ВТБ", cat: "banks", bg: "linear-gradient(135deg, #002D72 0%, #001A44 100%)", text: "ВТБ", price: 790 },
+            { id: 5, name: "Авито", cat: "services", bg: "linear-gradient(135deg, #00AAFF 0%, #0077B6 100%)", text: "A", price: 790 },
+            { id: 6, name: "Вконтакте", cat: "social", bg: "linear-gradient(135deg, #0077FF 0%, #0051CC 100%)", text: "VK", price: 790 },
+            { id: 7, name: "ВК Мессенджер", cat: "social", bg: "linear-gradient(135deg, #2688EB 0%, #175DA3 100%)", text: "💬", price: 790 },
+            { id: 8, name: "ВК Музыка", cat: "services", bg: "linear-gradient(135deg, #FF334B 0%, #CC1129 100%)", text: "🎵", price: 790 },
+            { id: 9, name: "Окко", cat: "services", bg: "linear-gradient(135deg, #2C2C2E 0%, #1C1C1E 100%)", text: "Okko", price: 790 },
+            { id: 10, name: "РЖД Пассажирам", cat: "services", bg: "linear-gradient(135deg, #003399 0%, #001F60 100%)", text: "РЖД", price: 790 },
+            { id: 11, name: "ChatGPT", cat: "ai", bg: "linear-gradient(135deg, #10A37F 0%, #0D8264 100%)", text: "AI", price: 790 },
+            { id: 12, name: "Claude AI", cat: "ai", bg: "linear-gradient(135deg, #CC785C 0%, #9E5842 100%)", text: "Cl", price: 790 },
+            { id: 13, name: "DeepSeek", cat: "ai", bg: "linear-gradient(135deg, #4E6EF2 0%, #324CB5 100%)", text: "DS", price: 790 },
+            { id: 14, name: "Perplexity", cat: "ai", bg: "linear-gradient(135deg, #20B2AA55 0%, #12807A 100%)", text: "Px", price: 790 },
+            { id: 15, name: "Happ Plus", cat: "services", bg: "linear-gradient(135deg, #FF9500 0%, #C67300 100%)", text: "⚡", price: 790 },
+            { id: 16, name: "v2RayTun", cat: "services", bg: "linear-gradient(135deg, #5856D6 0%, #3A389B 100%)", text: "VPN", price: 790 }
         ];
 
         let selectedCategory = 'all';
-        let selectedApps = new Set([1]); // По умолчанию выбран Сбербанк как в примере
+        let selectedApps = new Set([1]);
 
         function renderApps(filterText = '') {
             const grid = document.getElementById('appsGrid');
@@ -389,7 +375,7 @@
                 item.onclick = () => toggleApp(app.id);
                 
                 item.innerHTML = `
-                    <div class="app-icon">${app.icon}</div>
+                    <div class="app-icon" style="background: ${app.bg}">${app.text}</div>
                     <div class="app-name">${app.name}</div>
                 `;
                 grid.appendChild(item);
@@ -400,9 +386,7 @@
 
         function toggleApp(id) {
             if (selectedApps.has(id)) {
-                if (selectedApps.size > 1) {
-                    selectedApps.delete(id);
-                }
+                if (selectedApps.size > 1) selectedApps.delete(id);
             } else {
                 selectedApps.add(id);
             }
@@ -417,8 +401,7 @@
         }
 
         function filterApps() {
-            const text = document.getElementById('searchInput').value;
-            renderApps(text);
+            renderApps(document.getElementById('searchInput').value);
         }
 
         function updateCartBar() {
@@ -434,7 +417,6 @@
             } else {
                 cartBar.classList.remove('visible');
             }
-
         }
 
         function getDeclension(number, titles) {
@@ -446,7 +428,6 @@
             alert(`Переход к оплате заказа на сумму: ${selectedApps.size * 790} ₽`);
         }
 
-        // Инициализация
         renderApps();
     </script>
 </body>
