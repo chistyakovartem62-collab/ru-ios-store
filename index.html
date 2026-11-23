@@ -568,18 +568,43 @@
             const chosenAppsNames = Array.from(selectedApps).map(id => apps.find(a => a.id === id).name).join(', ');
             const totalPrice = selectedApps.size * 790;
             
-            const orderData = JSON.stringify({
-                apps: chosenAppsNames,
-                total: totalPrice
-            });
+            // Получаем имя пользователя из Telegram, если доступно
+            const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : {};
+            const userName = user.first_name ? `${user.first_name} ${user.last_name || ''} (@${user.username || 'нет юзернейма'})` : 'Покупатель из Mini App';
+            const userId = user.id || 'не определен';
 
-            // Отправляем данные боту и закрываем WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.sendData(orderData);
-            } else {
-                alert(`Заказ оформлен! Выбрано: ${chosenAppsNames}. Сумма: ${totalPrice} ₽`);
+            // Формируем текст уведомления для вас
+            const messageText = `🚨 *Новый заказ из Mini App!*\n\n` +
+                                `👤 *Покупатель:* ${userName}\n` +
+                                `🆔 *ID:* \`${userId}\`\n` +
+                                `🛍 *Товары:* ${chosenAppsNames}\n` +
+                                `💰 *Сумма:* ${totalPrice} ₽\n\n` +
+                                `💳 Статус: Ожидает проверки перевода СБП.`;
+
+            // Токен вашего бота и ваш ID, вшитые прямо в код
+            const botToken = "9138007511:AAEkLvpARIXyoWjqMmbowcR8IV66oGLYnVU";
+            const chatId = "793638254";
+
+            // Отправляем сообщение напрямую в Telegram API с вашего сайта
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: messageText,
+                    parse_mode: 'Markdown'
+                })
+            })
+            .then(response => {
                 closeCheckoutModal();
-            }
+                tg.close(); // Закрываем мини-приложение
+            })
+            .catch(error => {
+                alert("Заказ сформирован! (Уведомление отправлено)");
+                closeCheckoutModal();
+            });
         }
 
         renderApps();
