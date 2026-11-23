@@ -114,5 +114,27 @@ def delete_app(app_id: int, x_admin_key: str = Header(default="")):
 @app.get("/health")
 def health():
     return {"ok":True}
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import LabeledPrice
+
+# Ваш токен бота от BotFather
+TOKEN = "РАЗМЕСТИТЕ_ВАШ_ТОКЕН_БОТА"
+bot = Bot(token=TOKEN)
+
+# Функция создания инвойса на оплату
+async def create_invoice(chat_id: int, total_amount: int, app_names: str):
+    # Цены указываются в минимальных единицах (например, копейки или Telegram Stars)
+    prices = [LabeledPrice(label=f"Приложения: {app_names}", amount=total_amount * 100)]
+    
+    await bot.send_invoice(
+        chat_id=chat_id,
+        title="Покупка приложений в RU iOS Store",
+        description=f"Вы приобретаете: {app_names}",
+        payload="store_apps_purchase",
+        provider_token="ТОКЕН_ПЛАТЕЖНОГО_ПРОВАЙДЕРА_ОТ_БОТФАТЕРА", # Например, Сбербанк, ЮKassa через BotFather или оставьте для Telegram Stars
+        currency="RUB", # Или "XTR" для Telegram Stars
+        prices=prices,
+        start_parameter="buy_apps"
+    )
 
 # Telegram bot polling (optional): set BOT_TOKEN and run `python bot.py`
