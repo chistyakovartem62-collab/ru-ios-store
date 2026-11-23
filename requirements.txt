@@ -1,5 +1,1 @@
-pip>=24.0
 aiogram==3.13.0
-pydantic-core==2.23.4
-
-
