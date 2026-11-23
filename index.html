@@ -351,8 +351,31 @@
         };
 
         function checkout() {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            alert(`Переход к оплате выбранных приложений (${selectedApps.size} шт.)! Здесь можно подключить Telegram Payments.`);
+    if (selectedApps.size === 0) return;
+
+    let totalSum = 0;
+    let namesList = [];
+    
+    selectedApps.forEach(id => {
+        const app = apps.find(a => a.id === id);
+        if (app) {
+            totalSum += app.price;
+            namesList.push(app.name);
+        }
+    });
+
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+    // Отправляем данные выбранных приложений на ваш бэкенд или боту
+    // С помощью tg.sendData() бот получит сообщение со списком выбранных приложений и суммой
+    const orderData = JSON.stringify({
+        apps: namesList,
+        total: totalSum
+    });
+
+    tg.sendData(orderData); // Закрывает мини-приложение и передает данные боту
+}
+
         }
 
         renderGrid();
