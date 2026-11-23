@@ -185,7 +185,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* Плавающая кнопка покупки */
         .cart-bar {
             position: fixed;
             bottom: 75px;
@@ -237,7 +236,6 @@
             box-shadow: 0 4px 15px rgba(255, 45, 85, 0.4);
         }
 
-        /* Модальное окно оплаты СБП */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -338,7 +336,6 @@
             cursor: pointer;
         }
 
-        /* Нижняя навигация */
         .nav-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -403,7 +400,6 @@
         <div class="apps-grid" id="appsGrid"></div>
     </div>
 
-    <!-- Плавающая панель покупки -->
     <div class="cart-bar" id="cartBar">
         <div class="cart-info">
             <span class="cart-count" id="cartCount">1 приложение</span>
@@ -412,7 +408,6 @@
         <button class="buy-btn" onclick="openCheckoutModal()">Купить</button>
     </div>
 
-    <!-- Модальное окно СБП оплаты -->
     <div class="modal-overlay" id="checkoutModal" onclick="closeModalOnOutside(event)">
         <div class="modal-sheet">
             <div class="modal-title">Оплата по СБП</div>
@@ -425,7 +420,7 @@
                 </div>
                 <div class="pay-row">
                     <span class="pay-label">Номер телефона:</span>
-                    <span class="pay-val" id="sbpPhone">+7 (910) 566-52-20</span>
+                    <span class="pay-val">+7 (999) 000-00-00</span>
                 </div>
                 <div class="pay-row">
                     <span class="pay-label">Получатель:</span>
@@ -510,6 +505,9 @@
             updateCartBar();
         }
 
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
         function toggleApp(id) {
             if (selectedApps.has(id)) {
                 if (selectedApps.size > 1) selectedApps.delete(id);
@@ -567,8 +565,21 @@
         }
 
         function confirmPayment() {
-            alert("Спасибо! После проверки поступления средств инструкция по установке будет отправлена вам в чат бота.");
-            closeCheckoutModal();
+            const chosenAppsNames = Array.from(selectedApps).map(id => apps.find(a => a.id === id).name).join(', ');
+            const totalPrice = selectedApps.size * 790;
+            
+            const orderData = JSON.stringify({
+                apps: chosenAppsNames,
+                total: totalPrice
+            });
+
+            // Отправляем данные боту и закрываем WebApp
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.sendData(orderData);
+            } else {
+                alert(`Заказ оформлен! Выбрано: ${chosenAppsNames}. Сумма: ${totalPrice} ₽`);
+                closeCheckoutModal();
+            }
         }
 
         renderApps();
