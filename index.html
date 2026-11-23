@@ -2,111 +2,141 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Store Catalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Store — Приложения, коды и подписки</title>
+    <!-- Telegram WebApp Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: var(--tg-theme-bg-color, #0f0f11);
-            --card-bg: var(--tg-theme-secondary-bg-color, #1c1c1e);
-            --text-color: var(--tg-theme-text-color, #ffffff);
-            --hint-color: var(--tg-theme-hint-color, #8e8e93);
-            --accent-color: #ff3b30;
-            --accent-gradient: linear-gradient(135deg, #ff3b30 0%, #ff9500 100%);
+            --bg-color: #0f0b10;
+            --card-bg: #1c131d;
+            --card-border: rgba(255, 68, 102, 0.15);
+            --accent-color: #ff2d55;
+            --accent-gradient: linear-gradient(135deg, #ff2d55 0%, #b31432 100%);
+            --text-main: #ffffff;
+            --text-secondary: #9c919d;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 16px 16px 120px 16px;
+            color: var(--text-main);
+            padding-bottom: 110px;
         }
 
-        .promo-banner {
-            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Шапка */
+        .header-banner {
+            background: linear-gradient(180deg, #2a1520 0%, var(--bg-color) 100%);
+            padding: 20px 16px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .promo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
+            padding: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 14px;
         }
 
-        .promo-title {
+        .promo-info h2 {
             font-size: 15px;
-            font-weight: 700;
-        }
-
-        .promo-desc {
-            font-size: 12px;
-            color: var(--hint-color);
-            margin-top: 2px;
-        }
-
-        .video-btn {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            border: none;
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 14px;
             font-weight: 600;
-            width: 100%;
+            margin-bottom: 3px;
+        }
+
+        .promo-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .promo-badge {
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 10px;
+        }
+
+        /* Поиск и категории */
+        .search-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            cursor: pointer;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-secondary);
         }
 
         .categories {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            margin-bottom: 20px;
+            padding-bottom: 4px;
             scrollbar-width: none;
         }
-        .categories::-webkit-scrollbar { display: none; }
 
-        .cat-chip {
-            background-color: var(--card-bg);
-            color: var(--hint-color);
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
             padding: 8px 16px;
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             white-space: nowrap;
             cursor: pointer;
             transition: 0.2s;
         }
 
-        .cat-chip.active {
-            background-color: #ffffff;
-            color: #000000;
+        .cat-btn.active {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
         }
 
-        .search-input {
-            width: 100%;
-            background-color: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 15px;
-            color: var(--text-color);
-            outline: none;
-            margin-bottom: 20px;
+        /* Сетка приложений */
+        .container {
+            padding: 16px;
         }
-        .search-input::placeholder { color: var(--hint-color); }
 
-        .app-grid {
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .apps-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px 12px;
@@ -120,182 +150,248 @@
             position: relative;
         }
 
-        .app-icon-wrap {
+        .app-icon {
             width: 64px;
             height: 64px;
+            background: var(--card-bg);
             border-radius: 16px;
+            border: 1px solid var(--card-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
-            font-weight: bold;
-            color: white;
+            font-size: 24px;
+            margin-bottom: 6px;
+            overflow: hidden;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.1s;
         }
 
-        .app-item.selected .app-icon-wrap::after {
-            content: '✓';
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #34c759;
-            color: white;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg-color);
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .app-name {
             font-size: 12px;
             text-align: center;
-            margin-top: 6px;
-            white-space: nowrap;
+            color: var(--text-main);
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-            color: var(--text-color);
         }
 
-        .bottom-cart {
+        .app-item.selected .app-icon::after {
+            content: '✓';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--accent-color);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Плавающая кнопка покупки */
+        .cart-bar {
             position: fixed;
-            bottom: 16px;
+            bottom: 75px;
             left: 16px;
             right: 16px;
-            background: rgba(28, 28, 30, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
+            background: #251823;
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            border-radius: 18px;
             padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            transform: translateY(150px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
         }
 
+        .cart-bar.visible {
+            transform: translateY(0);
+        }
+
         .cart-info {
-            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         .cart-price {
             font-size: 18px;
             font-weight: 700;
-            margin-top: 2px;
+            color: var(--text-main);
         }
 
         .buy-btn {
             background: var(--accent-gradient);
             color: white;
             border: none;
-            border-radius: 14px;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 45, 85, 0.4);
         }
 
+        /* Нижняя навигация */
         .nav-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bg-color);
-            border-top: 1px solid rgba(255,255,255,0.08);
+            background: rgba(15, 11, 16, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0 24px;
-            z-index: 90;
-            display: none; /* Можно включить при желании */
+            padding: 10px 0 25px;
+            z-index: 101;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            gap: 4px;
+            background: none;
+            border: none;
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
         }
     </style>
 </head>
 <body>
 
-    <div class="promo-banner">
-        <div>
-            <div class="promo-title">🔥 Скидка до 30% на приложения</div>
-            <div class="promo-desc">Чем больше приложений — тем выше скидка</div>
+    <div class="header-banner">
+        <div class="promo-card">
+            <div class="promo-info">
+                <h2>🔥 Скидка до 30% на приложения</h2>
+                <p>Чем больше приложений — тем выше скидка</p>
+            </div>
+            <div class="promo-badge">D5</div>
+        </div>
+
+        <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="Поиск приложений..." oninput="filterApps()">
+        </div>
+
+        <div class="categories" id="categories">
+            <button class="cat-btn active" onclick="setCategory('all', this)">Все</button>
+            <button class="cat-btn" onclick="setCategory('banks', this)">Банки</button>
+            <button class="cat-btn" onclick="setCategory('social', this)">Общение</button>
+            <button class="cat-btn" onclick="setCategory('ai', this)">AI</button>
+            <button class="cat-btn" onclick="setCategory('services', this)">Сервисы</button>
         </div>
     </div>
 
-    <button class="video-btn" onclick="alert('Открываем видеоинструкцию по установке')">
-        <span>▶️ Видеоинструкция по установке</span>
-        <span style="color: var(--hint-color);">›</span>
-    </button>
-
-    <div class="categories" id="categoriesContainer">
-        <div class="cat-chip active" data-cat="all">Все</div>
-        <div class="cat-chip" data-cat="banks">Банки</div>
-        <div class="cat-chip" data-cat="social">Общение</div>
-        <div class="cat-chip" data-cat="ai">AI</div>
-        <div class="cat-chip" data-cat="services">Сервисы</div>
+    <div class="container">
+        <div class="apps-grid" id="appsGrid">
+            <!-- Список приложений динамически генерируется скриптом -->
+        </div>
     </div>
 
-    <input type="text" id="searchInput" class="search-input" placeholder="Поиск приложений">
-
-    <div class="app-grid" id="appGrid"></div>
-
-    <div class="bottom-cart" id="bottomCart" style="display: none;">
+    <!-- Плавающая панель покупки -->
+    <div class="cart-bar" id="cartBar">
         <div class="cart-info">
-            <div id="cartCount" style="color: var(--hint-color); font-size: 13px;">1 приложение</div>
-            <div class="cart-price" id="cartPrice">790 ₽</div>
+            <span class="cart-count" id="cartCount">1 приложение</span>
+            <span class="cart-price" id="cartTotalPrice">790 ₽</span>
         </div>
         <button class="buy-btn" onclick="checkout()">Купить</button>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+    <!-- Нижнее меню -->
+    <nav class="nav-bar">
+        <button class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+            Приложения
+        </button>
+        <button class="nav-item" onclick="alert('Раздел товаров в разработке')">
+            <svg viewBox="0 0 24 24"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H3V8h18v10z"/></svg>
+            Товары
+        </button>
+        <button class="nav-item" onclick="alert('История заказов пуста')">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            Заказы
+        </button>
+        <button class="nav-item" onclick="alert('Личный кабинет')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Профиль
+        </button>
+    </nav>
 
+    <script>
         const apps = [
-            { id: 1, name: "Сбербанк", cat: "banks", icon: "С", color: "#21A038", price: 290 },
-            { id: 2, name: "Т-Банк", cat: "banks", icon: "Т", color: "#FFDD2D", textColor: "#000", price: 290 },
-            { id: 3, name: "Макс", cat: "social", icon: "M", color: "#007AFF", price: 190 },
-            { id: 4, name: "Авито", cat: "services", icon: "А", color: "#00AAFF", price: 190 },
-            { id: 5, name: "Майл Почта", cat: "services", icon: "@", color: "#1680FF", price: 150 },
-            { id: 6, name: "Майл Облако", cat: "services", icon: "☁️", color: "#005FF9", price: 150 },
-            { id: 7, name: "Вконтакте", cat: "social", icon: "VK", color: "#0077FF", price: 190 },
-            { id: 8, name: "ВК Мессенджер", cat: "social", icon: "💬", color: "#00C7BE", price: 150 },
-            { id: 9, name: "ВК Музыка", cat: "social", icon: "🎵", color: "#FF2D55", price: 190 },
-            { id: 10, name: "ВК Видео", cat: "social", icon: "▶", color: "#007AFF", price: 190 },
-            { id: 11, name: "Окко", cat: "services", icon: "Ö", color: "#1c1c1e", price: 250 },
-            { id: 12, name: "РЖД Пассажирам", cat: "services", icon: "🚆", color: "#003399", price: 190 },
-            { id: 13, name: "Claude", cat: "ai", icon: "Cl", color: "#D97706", price: 390 },
-            { id: 14, name: "DeepSeek", cat: "ai", icon: "DS", color: "#2563EB", price: 390 }
+            { id: 1, name: "Сбербанк", cat: "banks", icon: "🟢", price: 790 },
+            { id: 2, name: "Т-Банк", cat: "banks", icon: "🟡", price: 790 },
+            { id: 3, name: "Альфа-Банк", cat: "banks", icon: "🔴", price: 790 },
+            { id: 4, name: "ВТБ", cat: "banks", icon: "🔵", price: 790 },
+            { id: 5, name: "Авито", cat: "services", icon: "📦", price: 790 },
+            { id: 6, name: "Вконтакте", cat: "social", icon: "💬", price: 790 },
+            { id: 7, name: "ВК Мессенджер", cat: "social", icon: "✈️", price: 790 },
+            { id: 8, name: "ВК Музыка", cat: "services", icon: "🎵", price: 790 },
+            { id: 9, name: "Окко", cat: "services", icon: "🍿", price: 790 },
+            { id: 10, name: "РЖД Пассажирам", cat: "services", icon: "🚆", price: 790 },
+            { id: 11, name: "ChatGPT", cat: "ai", icon: "🤖", price: 790 },
+            { id: 12, name: "Claude AI", cat: "ai", icon: "🧠", price: 790 },
+            { id: 13, name: "DeepSeek", cat: "ai", icon: "🔮", price: 790 },
+            { id: 14, name: "Perplexity", cat: "ai", icon: "🌐", price: 790 },
+            { id: 15, name: "Happ Plus", cat: "services", icon: "⚡", price: 790 },
+            { id: 16, name: "v2RayTun", cat: "services", icon: "🛡️", price: 790 }
         ];
 
-        let selectedApps = new Set();
-        let currentCategory = 'all';
-        let searchQuery = '';
+        let selectedCategory = 'all';
+        let selectedApps = new Set([1]); // По умолчанию выбран Сбербанк как в примере
 
-        function renderGrid() {
-            const grid = document.getElementById('appGrid');
+        function renderApps(filterText = '') {
+            const grid = document.getElementById('appsGrid');
             grid.innerHTML = '';
 
             const filtered = apps.filter(app => {
-                const matchCat = currentCategory === 'all' || app.cat === currentCategory;
-                const matchSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchCat && matchSearch;
+                const matchesCat = selectedCategory === 'all' || app.cat === selectedCategory;
+                const matchesSearch = app.name.toLowerCase().includes(filterText.toLowerCase());
+                return matchesCat && matchesSearch;
             });
 
             filtered.forEach(app => {
                 const isSelected = selectedApps.has(app.id);
                 const item = document.createElement('div');
                 item.className = `app-item ${isSelected ? 'selected' : ''}`;
+                item.onclick = () => toggleApp(app.id);
+                
                 item.innerHTML = `
-                    <div class="app-icon-wrap" style="background: ${app.color}; color: ${app.textColor || '#fff'}">${app.icon}</div>
+                    <div class="app-icon">${app.icon}</div>
                     <div class="app-name">${app.name}</div>
                 `;
-                item.onclick = () => toggleApp(app.id);
                 grid.appendChild(item);
             });
 
@@ -303,82 +399,55 @@
         }
 
         function toggleApp(id) {
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
             if (selectedApps.has(id)) {
-                selectedApps.delete(id);
+                if (selectedApps.size > 1) {
+                    selectedApps.delete(id);
+                }
             } else {
                 selectedApps.add(id);
             }
-            renderGrid();
+            renderApps(document.getElementById('searchInput').value);
+        }
+
+        function setCategory(cat, el) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            renderApps(document.getElementById('searchInput').value);
+        }
+
+        function filterApps() {
+            const text = document.getElementById('searchInput').value;
+            renderApps(text);
         }
 
         function updateCartBar() {
-            const cart = document.getElementById('bottomCart');
+            const cartBar = document.getElementById('cartBar');
+            const countEl = document.getElementById('cartCount');
+            const priceEl = document.getElementById('cartTotalPrice');
+
             if (selectedApps.size > 0) {
-                cart.style.display = 'flex';
-                let total = 0;
-                selectedApps.forEach(id => {
-                    const app = apps.find(a => a.id === id);
-                    if (app) total += app.price;
-                });
-                
-                document.getElementById('cartCount').innerText = `${selectedApps.size} ${getDeclension(selectedApps.size)}`;
-                document.getElementById('cartPrice').innerText = `${total} ₽`;
+                cartBar.classList.add('visible');
+                const count = selectedApps.size;
+                countEl.innerText = `${count} ${getDeclension(count, ['приложение', 'приложения', 'приложений'])}`;
+                priceEl.innerText = `${count * 790} ₽`;
             } else {
-                cart.style.display = 'none';
+                cartBar.classList.remove('visible');
             }
+
         }
 
-        function getDeclension(number) {
+        function getDeclension(number, titles) {
             const cases = [2, 0, 1, 1, 1, 2];
-            const titles = ['приложение', 'приложения', 'приложений'];
             return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
         }
 
-        document.querySelectorAll('.cat-chip').forEach(chip => {
-            chip.onclick = () => {
-                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-                document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                currentCategory = chip.dataset.cat;
-                renderGrid();
-            };
-        });
-
-        document.getElementById('searchInput').oninput = (e) => {
-            searchQuery = e.target.value;
-            renderGrid();
-        };
-
         function checkout() {
-    if (selectedApps.size === 0) return;
-
-    let totalSum = 0;
-    let namesList = [];
-    
-    selectedApps.forEach(id => {
-        const app = apps.find(a => a.id === id);
-        if (app) {
-            totalSum += app.price;
-            namesList.push(app.name);
-        }
-    });
-
-    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-    // Отправляем данные выбранных приложений на ваш бэкенд или боту
-    // С помощью tg.sendData() бот получит сообщение со списком выбранных приложений и суммой
-    const orderData = JSON.stringify({
-        apps: namesList,
-        total: totalSum
-    });
-
-    tg.sendData(orderData); // Закрывает мини-приложение и передает данные боту
-}
-
+            alert(`Переход к оплате заказа на сумму: ${selectedApps.size * 790} ₽`);
         }
 
-        renderGrid();
+        // Инициализация
+        renderApps();
     </script>
 </body>
 </html>
