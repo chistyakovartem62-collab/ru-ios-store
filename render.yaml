@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ru-ios-store
+    env: python
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python bot.py
